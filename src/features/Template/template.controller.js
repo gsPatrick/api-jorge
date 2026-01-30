@@ -138,3 +138,16 @@ exports.update = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
+exports.delete = async (req, res) => {
+    try {
+        const template = await TemplateService.getTemplateById(req.params.id);
+        if (!template) {
+            return res.status(404).send({ message: "Template not found" });
+        }
+        await template.destroy(); // Soft delete if paranoid is true, or hard delete
+        res.status(200).send({ message: "Template deleted successfully" });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};

@@ -42,4 +42,10 @@ router.put(
     controller.update
 );
 
+router.delete(
+    '/:id',
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.delete
+);
+
 module.exports = router;
