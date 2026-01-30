@@ -89,3 +89,52 @@ exports.getAssigned = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
+exports.getById = async (req, res) => {
+    try {
+        const template = await TemplateService.getTemplateById(req.params.id);
+        if (!template) {
+            return res.status(404).send({ message: "Template not found" });
+        }
+        res.status(200).send(template);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.update = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, configJson } = req.body;
+
+        // Find existing template first
+        const template = await TemplateService.getTemplateById(id);
+        if (!template) {
+            return res.status(404).send({ message: "Template not found" });
+        }
+
+        const updates = {};
+        if (name) updates.name = name;
+
+        if (configJson) {
+            let parsedConfig = configJson;
+            if (typeof configJson === 'string') {
+                try {
+                    parsedConfig = JSON.parse(configJson);
+                } catch (e) {
+                    return res.status(400).send({ message: "Invalid JSON format for configJson" });
+                }
+            }
+            updates.configJson = parsedConfig;
+        }
+
+        if (req.file) {
+            updates.fileName = req.file.filename;
+        }
+
+        await template.update(updates);
+        res.status(200).send(template);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};

@@ -30,9 +30,8 @@ db.authenticate()
 // Routes
 app.use('/api', router);
 
-// Uploads directory static access (optional, if we want direct link access without auth)
-// But requirements said download endpoint, so we might keep it restricted via controller.
-// app.use('/uploads', express.static('uploads'));
+// Uploads directory static access
+app.use('/uploads', express.static('uploads'));
 
 const PORT = process.env.PORT || 3000;
 

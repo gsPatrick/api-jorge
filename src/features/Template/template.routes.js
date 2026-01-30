@@ -30,4 +30,16 @@ router.get(
     controller.download
 );
 
+router.get(
+    '/:id',
+    [authJwt.verifyToken],
+    controller.getById
+);
+
+router.put(
+    '/:id',
+    [authJwt.verifyToken, authJwt.isAdmin, upload.single('file')],
+    controller.update
+);
+
 module.exports = router;
