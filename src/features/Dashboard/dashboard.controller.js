@@ -8,22 +8,23 @@ exports.getStats = async (req, res) => {
 
         // Mock data for charts since we don't have a "PrintJob" model yet
         // In a real scenario, we would count daily prints here.
+        // Mock data structure zeroed out until real models exist
         const printActivity = [
-            { name: 'Seg', prints: 12 },
-            { name: 'Ter', prints: 19 },
-            { name: 'Qua', prints: 3 },
-            { name: 'Qui', prints: 5 },
-            { name: 'Sex', prints: 20 },
-            { name: 'Sab', prints: 30 },
-            { name: 'Dom', prints: 15 },
+            { name: 'Seg', prints: 0 },
+            { name: 'Ter', prints: 0 },
+            { name: 'Qua', prints: 0 },
+            { name: 'Qui', prints: 0 },
+            { name: 'Sex', prints: 0 },
+            { name: 'Sab', prints: 0 },
+            { name: 'Dom', prints: 0 },
         ];
 
         res.status(200).send({
             cards: {
                 photographers: totalPhotographers,
                 activeTemplates: totalTemplates,
-                totalPrints: 12450, // Mock for now
-                activeEvents: 3 // Mock
+                totalPrints: 0,
+                activeEvents: 0
             },
             charts: {
                 activity: printActivity
