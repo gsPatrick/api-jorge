@@ -1,7 +1,7 @@
 {
-    "name": "printshot-api",
+    "name": "shottelling-api",
     "version": "1.0.0",
-    "description": "PrintShot Central API",
+    "description": "Shottelling Central API",
     "main": "app.js",
     "scripts": {
         "start": "node app.js",
