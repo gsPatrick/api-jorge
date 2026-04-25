@@ -15,6 +15,10 @@ const Template = sequelize.define('Template', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    overlayFileName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     configJson: {
         type: DataTypes.JSONB,
         allowNull: true,

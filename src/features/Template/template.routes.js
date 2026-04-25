@@ -6,7 +6,7 @@ const upload = require('../../config/storage.config');
 
 router.post(
     '/',
-    [authJwt.verifyToken, authJwt.isAdmin, upload.single('file')],
+    [authJwt.verifyToken, authJwt.isAdmin, upload.fields([{ name: 'file', maxCount: 1 }, { name: 'overlayFile', maxCount: 1 }])],
     controller.upload
 );
 
@@ -38,7 +38,7 @@ router.get(
 
 router.put(
     '/:id',
-    [authJwt.verifyToken, authJwt.isAdmin, upload.single('file')],
+    [authJwt.verifyToken, authJwt.isAdmin, upload.fields([{ name: 'file', maxCount: 1 }, { name: 'overlayFile', maxCount: 1 }])],
     controller.update
 );
 

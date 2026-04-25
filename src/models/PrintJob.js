@@ -24,6 +24,10 @@ const PrintJob = sequelize.define('PrintJob', {
         type: DataTypes.ENUM('BLUETOOTH_STANDARD', 'SDK', 'LOCAL_NETWORK'),
         allowNull: false,
     },
+    errorCode: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+    },
 }, {
     tableName: 'print_jobs',
     timestamps: true, // createdAt serves as the timestamp

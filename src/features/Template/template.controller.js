@@ -3,9 +3,12 @@ const path = require('path');
 
 exports.upload = async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).send({ message: "File is required!" });
+        if (!req.files || !req.files['file']) {
+            return res.status(400).send({ message: "Background file is required!" });
         }
+
+        const backgroundFile = req.files['file'][0];
+        const overlayFile = req.files['overlayFile'] ? req.files['overlayFile'][0] : null;
 
         const { name, configJson } = req.body;
 
@@ -21,7 +24,8 @@ exports.upload = async (req, res) => {
 
         const templateData = {
             name,
-            fileName: req.file.filename,
+            fileName: backgroundFile.filename,
+            overlayFileName: overlayFile ? overlayFile.filename : null,
             configJson: parsedConfig,
         };
 
@@ -40,6 +44,9 @@ exports.getActive = async (req, res) => {
         const templatesWithUrl = templates.map(t => {
             const temp = t.toJSON();
             temp.downloadUrl = `/api/templates/${t.id}/download`;
+            if (t.overlayFileName) {
+                temp.overlayDownloadUrl = `/api/templates/${t.id}/download?type=overlay`;
+            }
             return temp;
         });
 
@@ -56,7 +63,14 @@ exports.download = async (req, res) => {
             return res.status(404).send({ message: "Template not found" });
         }
 
-        const filePath = path.join(__dirname, '../../../uploads', template.fileName);
+        const isOverlay = req.query.type === 'overlay';
+        const fileName = isOverlay ? template.overlayFileName : template.fileName;
+
+        if (isOverlay && !fileName) {
+            return res.status(404).send({ message: "Overlay not found for this template" });
+        }
+
+        const filePath = path.join(__dirname, '../../../uploads', fileName);
         res.download(filePath);
     } catch (err) {
         res.status(500).send({ message: err.message });
@@ -81,6 +95,9 @@ exports.getAssigned = async (req, res) => {
         const templatesWithUrl = templates.map(t => {
             const temp = t.toJSON();
             temp.downloadUrl = `/api/templates/${t.id}/download`;
+            if (t.overlayFileName) {
+                temp.overlayDownloadUrl = `/api/templates/${t.id}/download?type=overlay`;
+            }
             return temp;
         });
 
@@ -128,8 +145,13 @@ exports.update = async (req, res) => {
             updates.configJson = parsedConfig;
         }
 
-        if (req.file) {
-            updates.fileName = req.file.filename;
+        if (req.files) {
+            if (req.files['file']) {
+                updates.fileName = req.files['file'][0].filename;
+            }
+            if (req.files['overlayFile']) {
+                updates.overlayFileName = req.files['overlayFile'][0].filename;
+            }
         }
 
         await template.update(updates);
