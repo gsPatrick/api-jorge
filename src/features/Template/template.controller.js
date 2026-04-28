@@ -143,6 +143,11 @@ exports.update = async (req, res) => {
                 }
             }
             updates.configJson = parsedConfig;
+            
+            // Handle explicit removal of overlay
+            if (parsedConfig.removeOverlay) {
+                updates.overlayFileName = null;
+            }
         }
 
         if (req.files) {
