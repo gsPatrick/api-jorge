@@ -11,6 +11,12 @@ router.post(
 );
 
 router.get(
+    '/',
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.getAll
+);
+
+router.get(
     '/assigned',
     [authJwt.verifyToken],
     controller.getAssigned
@@ -46,6 +52,12 @@ router.delete(
     '/:id',
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.delete
+);
+
+router.put(
+    '/:id/status',
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.toggleStatus
 );
 
 router.post(

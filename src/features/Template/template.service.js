@@ -11,6 +11,12 @@ class TemplateService {
         });
     }
 
+    async getAllTemplates() {
+        return await Template.findAll({
+            order: [['createdAt', 'DESC']]
+        });
+    }
+
     async getTemplateById(id) {
         return await Template.findByPk(id);
     }

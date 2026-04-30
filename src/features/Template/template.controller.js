@@ -36,6 +36,23 @@ exports.upload = async (req, res) => {
     }
 };
 
+exports.getAll = async (req, res) => {
+    try {
+        const templates = await TemplateService.getAllTemplates();
+        const templatesWithUrl = templates.map(t => {
+            const temp = t.toJSON();
+            temp.downloadUrl = `/api/templates/${t.id}/download`;
+            if (t.overlayFileName) {
+                temp.overlayDownloadUrl = `/api/templates/${t.id}/download?type=overlay`;
+            }
+            return temp;
+        });
+        res.status(200).send(templatesWithUrl);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
 exports.getActive = async (req, res) => {
     try {
         const templates = await TemplateService.getActiveTemplates();
@@ -174,6 +191,21 @@ exports.delete = async (req, res) => {
         }
         await template.destroy(); // Soft delete if paranoid is true, or hard delete
         res.status(200).send({ message: "Template deleted successfully" });
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+exports.toggleStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { isActive } = req.body;
+        const template = await TemplateService.getTemplateById(id);
+        if (!template) {
+            return res.status(404).send({ message: "Template not found" });
+        }
+        await template.update({ isActive });
+        res.status(200).send(template);
     } catch (err) {
         res.status(500).send({ message: err.message });
     }
