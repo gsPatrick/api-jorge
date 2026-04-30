@@ -178,3 +178,13 @@ exports.delete = async (req, res) => {
         res.status(500).send({ message: err.message });
     }
 };
+
+exports.duplicate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const newTemplate = await TemplateService.duplicateTemplate(id);
+        res.status(201).send(newTemplate);
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};

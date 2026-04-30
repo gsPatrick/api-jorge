@@ -48,4 +48,10 @@ router.delete(
     controller.delete
 );
 
+router.post(
+    '/:id/duplicate',
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.duplicate
+);
+
 module.exports = router;

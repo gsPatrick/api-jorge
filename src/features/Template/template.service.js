@@ -14,6 +14,21 @@ class TemplateService {
     async getTemplateById(id) {
         return await Template.findByPk(id);
     }
+
+    async duplicateTemplate(id) {
+        const original = await Template.findByPk(id);
+        if (!original) throw new Error("Template not found");
+
+        const newData = {
+            name: `${original.name} (Cópia)`,
+            fileName: original.fileName,
+            overlayFileName: original.overlayFileName,
+            configJson: original.configJson,
+            isActive: true
+        };
+
+        return await Template.create(newData);
+    }
 }
 
 module.exports = new TemplateService();
